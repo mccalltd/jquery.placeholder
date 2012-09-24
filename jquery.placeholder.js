@@ -34,8 +34,8 @@
                 labelLineHeight = $element.css('line-height');
 
             this.$overlabel = $('<span>')
-                .text(placeholder)
                 .hide()
+                .text(placeholder)
                 .addClass(this.settings.overlabelClass)
                 .css({
                     position: elementPosition,
