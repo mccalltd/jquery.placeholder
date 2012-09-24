@@ -1,71 +1,102 @@
 (function ($) {
-    var nativeSupport = 'placeholder' in document.createElement('input'),
-        defaults = {
-            labelClass: 'placeholder'
-        };
 
-    $.fn.placeholder = nativeSupport ? $.noop : function (options) {
+    // Placeholder class definition
+    //-------------------------------------------------------
 
-        var settings = $.extend(defaults, options),
-            initializedDataKey = 'placeholder.initialized';
+    var Placeholder = function (element, settings) {
+        this.settings = settings;
+        this.element = element;
+        this.$element = $(element);
+        this.$overlabel = null;
+        this.init();
+    };
 
-        return this.filter('[placeholder]').each(function () {
+    Placeholder.prototype = {
 
-            // Only initialize once!
-            if ($(this).data(initializedDataKey) === true)
-                return;
+        _buildOverlabel: function () {
+            var $element = this.$element,
+                placeholder = $element.attr('placeholder'),
+                elementWidth = $element.outerWidth(),
+                elementInnerWidth = $element.width(),
+                elementPaddingTop = parseFloat($element.css('padding-top')),
+                elementPaddingLeft = parseFloat($element.css('padding-left')),
+                elementBorderTopWidth = parseFloat($element.css('border-top-width')),
+                elementBorderLeftWidth = parseFloat($element.css('border-left-width')),
+                elementFloat = $element.css('float'),
+                elementPosition = elementFloat === 'none' ? 'absolute' : 'static',
+                labelPaddingTop = elementPaddingTop + elementBorderTopWidth,
+                labelPaddingLeft = elementPaddingLeft + elementBorderLeftWidth,
+                labelLineHeight = $element.css('line-height');
 
-            var $input = $(this),
-                placeholder = $input.attr('placeholder'),
-                $overlabel = $('<span>'),
-            // Vertical positioning
-                inputPaddingTop = parseFloat($input.css('padding-top')),
-                inputBorderTopWidth = parseFloat($input.css('border-top-width')),
-                labelPaddingTop = inputPaddingTop + inputBorderTopWidth,
-            // Horizontal positioning
-                inputWidth = $input.outerWidth(),
-                inputPaddingLeft = parseFloat($input.css('padding-left')),
-                inputBorderLeftWidth = parseFloat($input.css('border-left-width')),
-                labelPaddingLeft = inputPaddingLeft + inputBorderLeftWidth,
-            // Other overlabel properties
-                inputFloat = $input.css('float'),
-                inputPosition = inputFloat === 'none' ? 'absolute' : 'static',
-                labelLineHeight = $input.css('line-height');
-
-            // Place a label over the input.
-            $overlabel
+            this.$overlabel = $('<span>')
                 .text(placeholder)
                 .hide()
-                .addClass(settings.labelClass)
+                .addClass(this.settings.overlabelClass)
                 .css({
-                    position: inputPosition,
-                    'float': inputFloat,
+                    position: elementPosition,
+                    'float': elementFloat,
+                    'max-width': elementInnerWidth,
                     'padding-top': labelPaddingTop + 'px',
                     'padding-left': labelPaddingLeft + 'px',
-                    'margin-left': -1 * inputWidth + 'px',
+                    'margin-left': -1 * elementWidth + 'px',
                     'line-height': labelLineHeight
                 })
-                .insertAfter($input)
-                .on('click.placeholder', function () {
-                    $input.focus();
-                });
+                .insertAfter($element);
+        },
 
-            // Mark the input as initialized
-            $input.data(initializedDataKey, true);
+        focus: function () {
+            this.$element.focus();
+        },
 
-            // Toggle the placeholder visibility as the associated input is manipulated
-            $input
-                .on('focusin.placeholder', function () {
-                    $overlabel.hide();
-                })
-                .on('focusout.placeholder', function () {
-                    (this.value === '') ? $overlabel.show() : $.noop();
-                });
+        hide: function () {
+            this.$overlabel.hide();
+        },
 
-            // Initialize the placeholders
-            $input.trigger('focusout.placeholder');
+        init: function () {
+            this._buildOverlabel();
+            this.wireup();
+            this.reset();
+        },
 
-        }).end(); // Stop filtering on [placeholder] so chaining works as expected by caller.
+        reset: function () {
+            if (this.element.value === '')
+                this.$overlabel.show();
+        },
 
+        wireup: function () {
+            this.$overlabel
+                .on('click.placeholder', $.proxy(this.focus, this));
+
+            this.$element
+                .on('focusin.placeholder', $.proxy(this.hide, this))
+                .on('focusout.placeholder', $.proxy(this.reset, this));
+        }
     };
+
+    // Plugin
+    //-------------------------------------------------------
+
+    $.fn.placeholder = 'placeholder' in document.createElement('input')
+        ? $.noop
+        : function (option) {
+            // Filter by elements with placeholder attributes.
+            return this.filter('[placeholder]').each(function () {
+
+                var $this = $(this),
+                    data = $this.data('placeholder'),
+                    options = $.extend({}, $.fn.placeholder.defaults, typeof option === 'object' ? option : {});
+
+                // Initialize only once.
+                if (!data) $this.data('placeholder', (data = new Placeholder(this, options)));
+
+                // Call method on placeholder object attached to this element.
+                if (typeof option === 'string') data[option]();
+
+            }).end(); // Remove filter so chaining works for the caller.
+        };
+
+    $.fn.placeholder.defaults = {
+        overlabelClass: 'placeholder'
+    };
+
 } (jQuery));

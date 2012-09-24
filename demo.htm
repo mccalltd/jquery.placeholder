@@ -27,6 +27,25 @@
             input:focus, textarea:focus {
                 border-color: #999;
             }
+            .placeholder {
+                color: #aaa;
+            }
+            .float-inputs {
+                
+            }
+            .clearfix {
+                *zoom: 1;
+            }
+            .clearfix:before, .clearfix:after {
+                display: table;
+                content: "";
+                /* Fixes Opera/contenteditable bug:
+                   http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952 */
+                line-height: 0;
+              }
+            .clearfix:after {
+                clear: both;
+            }
         </style>
     </head>
     <body>
@@ -34,6 +53,14 @@
             <p><input type="text" placeholder="Username" /></p>
             <p><input type="password" placeholder="Password" /></p>
             <p><textarea rows="5" placeholder="What's the secret of the universe?"></textarea></p>
+            <p>
+                <input type="text" placeholder="Your Name"/>
+                <input type="text" placeholder="Your Damage"/>
+            </p>
+            <p class="float-inputs clearfix">
+                <input type="text" placeholder="I'm floating..."/>
+                <input type="text" placeholder="... away, away..."/>
+            </p>
         </form>
     </body>
 </html>
