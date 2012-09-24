@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>jquery.placeholder demo</title>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+        <script type="text/javascript" src="jquery.placeholder.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('[placeholder]').placeholder();
+            });
+        </script>
+        <style type="text/css">
+            body { 
+                font: 14px/1.5em 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            }
+            textarea { 
+                font-size: inherit; 
+                font-family: inherit; 
+            }
+            input, textarea {
+                width: 200px;
+                border: solid 1px #ccc;
+                padding: 5px;
+                border-radius: 3px;
+            }
+            input:focus, textarea:focus {
+                border-color: #999;
+            }
+        </style>
+    </head>
+    <body>
+        <form>
+            <p><input type="text" placeholder="Username" /></p>
+            <p><input type="password" placeholder="Password" /></p>
+            <p><textarea rows="5" placeholder="What's the secret of the universe?"></textarea></p>
+        </form>
+    </body>
+</html>
