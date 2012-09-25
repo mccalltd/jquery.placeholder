@@ -16,42 +16,35 @@
 
         _buildOverlabel: function () {
             var $element = this.$element,
-                placeholder = $element.attr('placeholder'),
-                elementInnerHeight = $element.height(),
-                elementWidth = $element.outerWidth(),
-                elementInnerWidth = $element.width(),
-                elementPaddingTop = parseFloat($element.css('padding-top')),
-                elementPaddingLeft = parseFloat($element.css('padding-left')),
-                elementBorderTopWidth = parseFloat($element.css('border-top-width')),
-                elementBorderLeftWidth = parseFloat($element.css('border-left-width')),
                 elementFloat = $element.css('float'),
-                elementPosition = elementFloat === 'none' ? 'absolute' : 'static',
-                labelMaxWidth = elementInnerWidth,
-                labelMaxHeight = elementInnerHeight,
-                labelPaddingTop = elementPaddingTop + elementBorderTopWidth,
-                labelPaddingLeft = elementPaddingLeft + elementBorderLeftWidth,
-                labelFontSize = $element.css('font-size'),
-                labelFontFamily = $element.css('font-family'),
-                labelLineHeight = $element.css('line-height');
+                labelPosition = elementFloat === 'none' ? 'absolute' : 'static';
 
             this.$overlabel = $('<span>')
-                .text(placeholder)
                 .hide()
+                .text($element.attr('placeholder'))
                 .addClass(this.settings.overlabelClass)
                 .css({
-                    position: elementPosition,
+                    position: labelPosition,
                     'float': elementFloat,
-                    'max-width': labelMaxWidth,
-                    'max-height': labelMaxHeight,
+                    'max-width': $element.width(),
+                    'max-height': $element.height(),
                     'overflow': 'hidden',
-                    'padding-top': labelPaddingTop + 'px',
-                    'padding-left': labelPaddingLeft + 'px',
-                    'margin-left': -1 * elementWidth + 'px',
-                    'font-size': labelFontSize,
-                    'font-family': labelFontFamily,
-                    'line-height': labelLineHeight
+                    'padding-top': this._sumOfCssProperties($element, ['padding-top', 'border-top-width']),
+                    'padding-left': this._sumOfCssProperties($element, ['padding-left', 'border-left-width']),
+                    'margin-left': -1 * $element.outerWidth() + 'px',
+                    'font-size': $element.css('font-size'),
+                    'font-family': $element.css('font-family'),
+                    'line-height': $element.css('line-height')
                 })
                 .insertAfter($element);
+        },
+
+        _sumOfCssProperties: function ($element, cssProperties) {
+            var sum = 0;
+            $.each(cssProperties, function (property) {
+                sum += parseFloat($element.css(property));
+            });
+            return sum + 'px';
         },
 
         focus: function () {
@@ -59,10 +52,9 @@
         },
 
         hide: function () {
-            if (this._visible) {
-                this.$overlabel.hide();
-                this._visible = false;
-            }
+            if (!this._visible) return;
+            this.$overlabel.hide();
+            this._visible = false;
         },
 
         init: function () {
@@ -72,19 +64,13 @@
         },
 
         show: function () {
-            if (!this._visible) {
-                this.$overlabel.show();
-                this._visible = true;
-            }
+            if (this._visible) return; 
+            this.$overlabel.show();
+            this._visible = true;
         },
 
         toggle: function () {
-            var elementValue = this.element.value;
-            if (elementValue === '') {
-                this.show();
-            } else {
-                this.hide();
-            }
+            (this.element.value === '') ? this.show() : this.hide();
         },
 
         wireup: function () {
