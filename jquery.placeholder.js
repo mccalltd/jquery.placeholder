@@ -10,8 +10,8 @@
     var nativeSupport = 'placeholder' in document.createElement('input');
 
     /***************************************************************
-	 * Placeholder class definition
-	 ***************************************************************/
+    * Placeholder class definition
+    ***************************************************************/
 
     var Placeholder = function (element, settings) {
         this._visible = false;
@@ -123,8 +123,8 @@
     };
 
     /***************************************************************
-	 * Plugin definition
-     ***************************************************************/
+    * Plugin definition
+    ***************************************************************/
 
     $.fn.placeholder = nativeSupport ? $.noop : function (option) {
         // Filter by elements with placeholder attributes.
