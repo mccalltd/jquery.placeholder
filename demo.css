@@ -1,41 +1,46 @@
-body { 
-	font: 14px/1.5em 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+body {
+    font: 14px/1.5em 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
 input, textarea {
-	width: 200px;
-	border: solid 1px #ccc;
-	padding: 5px;
-	border-radius: 3px;
-	font-size: inherit; 
-	font-family: inherit; 
+    width: 200px;
+    border: solid 1px #ccc;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: inherit;
+    font-family: inherit;
 }
-input:focus, textarea:focus {
-	border-color: #999;
-}
+    input:focus, textarea:focus {
+        border-color: #999;
+    }
+
 .placeholder {
 	color: #aaa;
 }
+
 .float-inputs input {
-	float: left;
+    float: left;
 }
+
 .clearfix {
 	*zoom: 1;
 }
-.clearfix:before, .clearfix:after {
-	display: table;
-	content: "";
-	/* Fixes Opera/contenteditable bug:
+    .clearfix:before, .clearfix:after {
+        display: table;
+        content: "";
+        /* Fixes Opera/contenteditable bug:
 	   http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952 */
-	line-height: 0;
-}
-.clearfix:after {
-	clear: both;
-}
+        line-height: 0;
+    }
+    .clearfix:after {
+        clear: both;
+    }
+
 .absolute-container {
-	position: relative;
+    position: relative;
 }
-.absolute-container input {
-	position: absolute;
-	top: 50px;
-	left: 50px;
-}
+    .absolute-container input {
+        position: absolute;
+        top: 50px;
+        left: 50px;
+    }
