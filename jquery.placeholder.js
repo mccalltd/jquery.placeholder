@@ -29,8 +29,8 @@
                     'max-width': $element.width(),
                     'max-height': $element.height(),
                     'overflow': 'hidden',
-                    'padding-top': this._sumOfCssProperties($element, ['padding-top', 'border-top-width']),
-                    'padding-left': this._sumOfCssProperties($element, ['padding-left', 'border-left-width']),
+                    'padding-top': this._sumCssProperties($element, ['padding-top', 'border-top-width']),
+                    'padding-left': this._sumCssProperties($element, ['padding-left', 'border-left-width']),
                     'margin-left': -1 * $element.outerWidth() + 'px',
                     'font-size': $element.css('font-size'),
                     'font-family': $element.css('font-family'),
@@ -39,9 +39,9 @@
                 .insertAfter($element);
         },
 
-        _sumOfCssProperties: function ($element, cssProperties) {
+        _sumCssProperties: function ($element, cssProperties) {
             var sum = 0;
-            $.each(cssProperties, function (property) {
+            $.each(cssProperties, function (index, property) {
                 sum += parseFloat($element.css(property));
             });
             return sum + 'px';
