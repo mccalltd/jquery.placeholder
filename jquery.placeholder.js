@@ -53,8 +53,8 @@
 
                 if (elementPosition === 'absolute') {
                     $overlabel.css({
-                        top: $element.css('top'),
-                        left: $element.css('left'),
+                        'top': $element.css('top'),
+                        'left': $element.css('left'),
                         'margin-left': 'auto'
                     });
                 }
