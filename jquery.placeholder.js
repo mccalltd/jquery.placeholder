@@ -1,5 +1,7 @@
 (function ($) {
 
+	var nativeSupport = 'placeholder' in document.createElement('input');
+
     // Placeholder class definition
     //-------------------------------------------------------
 
@@ -16,10 +18,13 @@
 
         _buildOverlabel: function () {
             var $element = this.$element,
+				$overlabel = null,
                 elementFloat = $element.css('float'),
-                labelPosition = elementFloat === 'none' ? 'absolute' : 'static';
+				elementPosition = $element.css('position'),
+                labelPosition;
 
-            this.$overlabel = $('<span>')
+			// Build the label.
+            $overlabel = this.$overlabel = $('<span>')
                 .hide()
                 .text($element.attr('placeholder'))
                 .addClass(this.settings.overlabelClass)
@@ -35,8 +40,30 @@
                     'font-size': $element.css('font-size'),
                     'font-family': $element.css('font-family'),
                     'line-height': $element.css('line-height')
-                })
-                .insertAfter($element);
+                });
+				
+			if (elementFloat !== 'none') {
+				// Position label with floated element.
+                $overlabel.css({
+					'float': elementFloat,
+					'position': 'static'
+				});
+			} else {
+				// Position label with non-floated element.
+                $overlabel.css({ 'position': 'absolute' });
+				
+				// Position label with absolutely positioned element.
+				if (elementPosition === 'absolute') {
+					$overlabel.css({
+						top: $element.css('top'),
+						left: $element.css('left'),
+						'margin-left': 'auto'
+					});
+				}
+			}
+			
+			// Add the label to the DOM.
+			$overlabel.insertAfter($element);
         },
 
         _sumCssProperties: function ($element, cssProperties) {
@@ -85,26 +112,26 @@
 
     // Plugin
     //-------------------------------------------------------
+    
+	$.fn.placeholder = nativeSupport ? $.noop : function (option) {
+		// Filter by elements with placeholder attributes.
+		return this.filter('[placeholder]').each(function () {
 
-    $.fn.placeholder = 'placeholder' in document.createElement('input')
-        ? $.noop
-        : function (option) {
-            // Filter by elements with placeholder attributes.
-            return this.filter('[placeholder]').each(function () {
+			var $this = $(this),
+				data = $this.data('placeholder'),
+				options = $.extend({}, $.fn.placeholder.defaults, typeof option === 'object' ? option : {});
 
-                var $this = $(this),
-                    data = $this.data('placeholder'),
-                    options = $.extend({}, $.fn.placeholder.defaults, typeof option === 'object' ? option : {});
+			// Initialize only once.
+			if (!data) $this.data('placeholder', (data = new Placeholder(this, options)));
 
-                // Initialize only once.
-                if (!data) $this.data('placeholder', (data = new Placeholder(this, options)));
+			// Call method on placeholder object attached to this element.
+			if (typeof option === 'string') data[option]();
 
-                // Call method on placeholder object attached to this element.
-                if (typeof option === 'string') data[option]();
+		}).end(); // Remove filter so chaining works for the caller.
+	};
 
-            }).end(); // Remove filter so chaining works for the caller.
-        };
-
+	$.fn.placeholder.nativeSupport = nativeSupport;
+	
     $.fn.placeholder.defaults = {
         overlabelClass: 'placeholder'
     };

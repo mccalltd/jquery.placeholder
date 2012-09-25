@@ -3,50 +3,18 @@
     <head>
         <meta charset="utf-8" />
         <title>jquery.placeholder demo</title>
+        <link rel="stylesheet" href="demo.css" />
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
         <script type="text/javascript" src="jquery.placeholder.js"></script>
         <script type="text/javascript">
             $(function () {
+				$('#support-text').text($.fn.placeholder.nativeSupport ? 'Native' : 'No');
                 $('[placeholder]').placeholder();
             });
         </script>
-        <style type="text/css">
-            body { 
-                font: 14px/1.5em 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            }
-            input, textarea {
-                width: 200px;
-                border: solid 1px #ccc;
-                padding: 5px;
-                border-radius: 3px;
-                font-size: inherit; 
-                font-family: inherit; 
-            }
-            input:focus, textarea:focus {
-                border-color: #999;
-            }
-            .placeholder {
-                color: #aaa;
-            }
-            .float-inputs {
-                
-            }
-            .clearfix {
-                *zoom: 1;
-            }
-            .clearfix:before, .clearfix:after {
-                display: table;
-                content: "";
-                /* Fixes Opera/contenteditable bug:
-                   http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952 */
-                line-height: 0;
-              }
-            .clearfix:after {
-                clear: both;
-            }
-        </style>
     </head>
     <body>
+		<h4><span id="support-text"></span> placeholder support</h4>
         <form>
             <p><input type="text" placeholder="Username" /></p>
             <p><input type="password" placeholder="Password" /></p>
@@ -60,6 +28,9 @@
                 <input type="text" placeholder="I'm floating..."/>
                 <input type="text" placeholder="... away, away..."/>
             </p>
+			<p class="absolute-container">
+				<input type="text" placeholder="I'm absolutely positioned..."/>
+			</p>
         </form>
     </body>
 </html>
