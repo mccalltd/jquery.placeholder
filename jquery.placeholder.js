@@ -7,13 +7,13 @@
  */
 (function ($) {
 
-    var nativeSupport = 'placeholder' in document.createElement('input');
+    var nativeSupport = 'placeholder' in document.createElement('input'),
 
     /***************************************************************
     * Placeholder class definition
     ***************************************************************/
 
-    var Placeholder = function (element, settings) {
+    Placeholder = function(element, settings) {
         this._visible = false;
         this.settings = settings;
         this.element = element;
