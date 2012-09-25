@@ -48,13 +48,7 @@
                     'line-height': $element.css('line-height')
                 });
 
-            if (elementFloat !== 'none') {
-                $overlabel.css({
-                    'float': elementFloat,
-                    'position': 'static'
-                });
-
-            } else { // elementFloat === 'none'
+            if (elementFloat === 'none') {
                 $overlabel.css({ 'position': 'absolute' });
 
                 if (elementPosition === 'absolute') {
@@ -64,6 +58,12 @@
                         'margin-left': 'auto'
                     });
                 }
+
+            } else { // elementFloat !== 'none'
+                $overlabel.css({
+                    'float': elementFloat,
+                    'position': 'static'
+                });
             }
 
             $overlabel.insertAfter($element);
