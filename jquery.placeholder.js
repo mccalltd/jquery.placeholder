@@ -4,6 +4,7 @@
     //-------------------------------------------------------
 
     var Placeholder = function (element, settings) {
+        this._visible = false;
         this.settings = settings;
         this.element = element;
         this.$element = $(element);
@@ -20,22 +21,22 @@
                 elementWidth = $element.outerWidth(),
                 elementInnerWidth = $element.width(),
                 elementPaddingTop = parseFloat($element.css('padding-top')),
-                elementPaddingBottom = parseFloat($element.css('padding-bottom')),
                 elementPaddingLeft = parseFloat($element.css('padding-left')),
                 elementBorderTopWidth = parseFloat($element.css('border-top-width')),
-                elementBorderBottomWidth = parseFloat($element.css('border-bottom-width')),
                 elementBorderLeftWidth = parseFloat($element.css('border-left-width')),
                 elementFloat = $element.css('float'),
                 elementPosition = elementFloat === 'none' ? 'absolute' : 'static',
                 labelMaxWidth = elementInnerWidth,
-                labelMaxHeight = elementInnerHeight + elementPaddingBottom - elementBorderBottomWidth,
+                labelMaxHeight = elementInnerHeight,
                 labelPaddingTop = elementPaddingTop + elementBorderTopWidth,
                 labelPaddingLeft = elementPaddingLeft + elementBorderLeftWidth,
+                labelFontSize = $element.css('font-size'),
+                labelFontFamily = $element.css('font-family'),
                 labelLineHeight = $element.css('line-height');
 
             this.$overlabel = $('<span>')
-                .hide()
                 .text(placeholder)
+                .hide()
                 .addClass(this.settings.overlabelClass)
                 .css({
                     position: elementPosition,
@@ -46,6 +47,8 @@
                     'padding-top': labelPaddingTop + 'px',
                     'padding-left': labelPaddingLeft + 'px',
                     'margin-left': -1 * elementWidth + 'px',
+                    'font-size': labelFontSize,
+                    'font-family': labelFontFamily,
                     'line-height': labelLineHeight
                 })
                 .insertAfter($element);
@@ -56,18 +59,32 @@
         },
 
         hide: function () {
-            this.$overlabel.hide();
+            if (this._visible) {
+                this.$overlabel.hide();
+                this._visible = false;
+            }
         },
 
         init: function () {
             this._buildOverlabel();
             this.wireup();
-            this.reset();
+            this.toggle();
         },
 
-        reset: function () {
-            if (this.element.value === '')
+        show: function () {
+            if (!this._visible) {
                 this.$overlabel.show();
+                this._visible = true;
+            }
+        },
+
+        toggle: function () {
+            var elementValue = this.element.value;
+            if (elementValue === '') {
+                this.show();
+            } else {
+                this.hide();
+            }
         },
 
         wireup: function () {
@@ -76,7 +93,7 @@
 
             this.$element
                 .on('focusin.placeholder', $.proxy(this.hide, this))
-                .on('focusout.placeholder', $.proxy(this.reset, this));
+                .on('focusout.placeholder', $.proxy(this.toggle, this));
         }
     };
 
